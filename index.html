@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Coflanet Internal</title>
+<link rel="preconnect" href="https://cdn.jsdelivr.net">
+<link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0f0f11;--bg2:#16161a;--bg3:#1e1e24;--bg4:#26262e;
+  --primary:#6541F2;--primary-dim:#6541F240;--primary-light:#8B6FFF;
+  --text:#e8e8ec;--text2:#a0a0b0;--text3:#68687a;
+  --border:#2a2a36;--card:#1a1a22;
+  --green:#34d399;--yellow:#fbbf24;--red:#f87171;--blue:#60a5fa;
+  --radius:12px;--radius-sm:8px;
+}
+html{font-size:14px}
+body{font-family:'Pretendard',system-ui,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;overflow:hidden}
+
+/* Sidebar */
+.sidebar{width:240px;height:100vh;background:var(--bg2);border-right:1px solid var(--border);display:flex;flex-direction:column;flex-shrink:0;position:fixed;left:0;top:0;z-index:100;transition:transform .3s}
+.sidebar-header{padding:20px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px}
+.sidebar-header .logo{width:32px;height:32px;background:var(--primary);border-radius:8px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:16px;color:#fff}
+.sidebar-header h1{font-size:15px;font-weight:700;color:var(--text)}
+.sidebar-header span{font-size:10px;color:var(--text3);display:block;margin-top:2px}
+.sidebar nav{flex:1;padding:12px 8px;overflow-y:auto}
+.nav-item{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:var(--radius-sm);cursor:pointer;color:var(--text2);font-size:13px;font-weight:500;transition:.15s;user-select:none}
+.nav-item:hover{background:var(--bg3);color:var(--text)}
+.nav-item.active{background:var(--primary-dim);color:var(--primary-light);font-weight:600}
+.nav-item svg{width:18px;height:18px;flex-shrink:0}
+.sidebar-footer{padding:16px 20px;border-top:1px solid var(--border);font-size:11px;color:var(--text3)}
+.mobile-toggle{display:none;position:fixed;top:12px;left:12px;z-index:200;background:var(--bg2);border:1px solid var(--border);border-radius:8px;width:40px;height:40px;color:var(--text);cursor:pointer;align-items:center;justify-content:center}
+.overlay{display:none;position:fixed;inset:0;background:#0008;z-index:90}
+
+/* Main */
+.main{margin-left:240px;flex:1;height:100vh;overflow-y:auto;padding:32px;width:calc(100% - 240px)}
+.page{display:none}
+.page.active{display:block}
+.page-title{font-size:22px;font-weight:700;margin-bottom:4px}
+.page-desc{color:var(--text2);font-size:13px;margin-bottom:24px}
+
+/* Cards */
+.card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:20px;margin-bottom:16px}
+.card-title{font-size:14px;font-weight:600;margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.card-title .dot{width:8px;height:8px;border-radius:50%}
+
+/* Grid */
+.grid-2{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:16px}
+.grid-3{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px}
+
+/* Progress */
+.progress-bar{height:6px;background:var(--bg4);border-radius:3px;overflow:hidden;margin-top:8px}
+.progress-bar .fill{height:100%;border-radius:3px;transition:width .5s}
+
+/* Checklist */
+.checklist{list-style:none}
+.checklist li{padding:8px 0;border-bottom:1px solid var(--border);font-size:13px;display:flex;align-items:center;gap:8px;color:var(--text2)}
+.checklist li:last-child{border-bottom:none}
+.check{width:16px;height:16px;border-radius:4px;border:1.5px solid var(--border);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:10px}
+.check.done{background:var(--green);border-color:var(--green);color:#000}
+.check.done::after{content:'✓'}
+
+/* Timeline */
+.timeline{position:relative;padding-left:24px}
+.timeline::before{content:'';position:absolute;left:8px;top:0;bottom:0;width:2px;background:var(--border)}
+.timeline-item{position:relative;margin-bottom:20px}
+.timeline-item::before{content:'';position:absolute;left:-20px;top:4px;width:12px;height:12px;border-radius:50%;background:var(--primary);border:2px solid var(--bg)}
+.timeline-item .tl-date{font-size:11px;color:var(--text3);margin-bottom:2px}
+.timeline-item .tl-text{font-size:13px;color:var(--text2)}
+
+/* Persona */
+.persona-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:20px;display:flex;flex-direction:column;gap:12px}
+.persona-header{display:flex;align-items:center;gap:12px}
+.avatar{width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:16px;color:#fff;flex-shrink:0}
+.persona-name{font-size:15px;font-weight:600}
+.persona-sub{font-size:12px;color:var(--text3)}
+.persona-section{font-size:12px;color:var(--text3);font-weight:600;text-transform:uppercase;letter-spacing:.5px;margin-top:4px}
+.persona-detail{font-size:13px;color:var(--text2);line-height:1.6}
+.badge{display:inline-block;padding:2px 8px;border-radius:10px;font-size:11px;font-weight:600}
+.badge-new{background:#6541F220;color:var(--primary-light)}
+.badge-vibe{background:#34d39920;color:var(--green)}
+.badge-risk{background:#f8717120;color:var(--red)}
+.badge-phase{background:#60a5fa20;color:var(--blue)}
+
+/* Decision */
+.decision-input{width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-sm);padding:12px 16px;color:var(--text);font-size:14px;font-family:inherit;resize:vertical;min-height:80px}
+.decision-input:focus{outline:none;border-color:var(--primary)}
+.btn{padding:10px 20px;border-radius:var(--radius-sm);border:none;font-family:inherit;font-size:13px;font-weight:600;cursor:pointer;transition:.15s}
+.btn-primary{background:var(--primary);color:#fff}
+.btn-primary:hover{background:var(--primary-light)}
+.btn-secondary{background:var(--bg4);color:var(--text2)}
+.history-item{padding:12px;border-bottom:1px solid var(--border);font-size:13px}
+.history-item:last-child{border-bottom:none}
+.history-q{color:var(--text);font-weight:500;margin-bottom:4px}
+.history-time{color:var(--text3);font-size:11px}
+
+/* Roadmap */
+.phase-header{font-size:16px;font-weight:700;margin:24px 0 12px;display:flex;align-items:center;gap:8px}
+.phase-header:first-child{margin-top:0}
+.feature-row{display:flex;align-items:center;gap:8px;padding:10px 0;border-bottom:1px solid var(--border);flex-wrap:wrap}
+.feature-row:last-child{border-bottom:none}
+.feature-name{font-size:13px;flex:1;min-width:150px}
+.feature-meta{display:flex;gap:6px;flex-wrap:wrap}
+
+/* IA Tree */
+.ia-tree{padding-left:0;list-style:none}
+.ia-tree ul{padding-left:20px;list-style:none;border-left:1px solid var(--border);margin-left:8px}
+.ia-tree li{position:relative;padding:6px 0 6px 16px;font-size:13px;color:var(--text2)}
+.ia-tree > li{padding-left:0}
+.ia-tree li::before{content:'';position:absolute;left:0;top:14px;width:10px;height:1px;background:var(--border)}
+.ia-tree > li::before{display:none}
+.ia-node{display:inline-flex;align-items:center;gap:6px}
+.ia-label{background:var(--bg3);padding:3px 10px;border-radius:4px;font-size:12px}
+.ia-new{border:1px dashed var(--primary);background:var(--primary-dim)}
+
+/* Cost Table */
+.cost-table{width:100%;border-collapse:collapse;font-size:13px}
+.cost-table th{text-align:left;padding:10px 12px;background:var(--bg3);color:var(--text2);font-weight:600;font-size:12px;border-bottom:1px solid var(--border)}
+.cost-table td{padding:10px 12px;border-bottom:1px solid var(--border);color:var(--text2)}
+.cost-table tr:hover td{background:var(--bg3)}
+
+/* Scrollbar */
+::-webkit-scrollbar{width:6px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--bg4);border-radius:3px}
+
+/* Responsive */
+@media(max-width:768px){
+  .sidebar{transform:translateX(-100%)}
+  .sidebar.open{transform:translateX(0)}
+  .mobile-toggle{display:flex}
+  .overlay.show{display:block}
+  .main{margin-left:0;width:100%;padding:16px;padding-top:60px}
+  .grid-2,.grid-3{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<button class="mobile-toggle" onclick="toggleSidebar()">
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h18M3 6h18M3 18h18"/></svg>
+</button>
+<div class="overlay" id="overlay" onclick="toggleSidebar()"></div>
+
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-header">
+    <div class="logo">C</div>
+    <div><h1>Coflanet</h1><span>Internal Tools</span></div>
+  </div>
+  <nav>
+    <div class="nav-item active" onclick="navigate('dashboard')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+      현재 상황
+    </div>
+    <div class="nav-item" onclick="navigate('persona')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
+      퍼소나
+    </div>
+    <div class="nav-item" onclick="navigate('decision')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+      퍼소나 의사결정
+    </div>
+    <div class="nav-item" onclick="navigate('roadmap')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+      로드맵
+    </div>
+    <div class="nav-item" onclick="navigate('ia')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 01-2 2H4a2 2 0 01-2-2V5a2 2 0 012-2h5l2 3h9a2 2 0 012 2z"/></svg>
+      IA 정보구조
+    </div>
+    <div class="nav-item" onclick="navigate('cost')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
+      개발 비용 분석
+    </div>
+  </nav>
+  <div class="sidebar-footer">Coflanet &copy; 2025 &middot; 택림</div>
+</aside>
+
+<main class="main" id="main">
+
+<!-- 1. Dashboard -->
+<section class="page active" id="page-dashboard">
+  <h2 class="page-title">현재 상황 대시보드</h2>
+  <p class="page-desc">프로젝트 전체 진행 현황을 한눈에 파악할 수 있어요.</p>
+
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-title"><span class="dot" style="background:var(--primary)"></span>디자인 시스템</div>
+      <div style="font-size:13px;color:var(--text2);margin-bottom:8px">토큰 통일 완료 · 위젯 12개 이관 · Figma Variables 91,030 바인딩</div>
+      <div style="display:flex;justify-content:space-between;font-size:12px;color:var(--text3)"><span>진행률</span><span>78%</span></div>
+      <div class="progress-bar"><div class="fill" style="width:78%;background:var(--primary)"></div></div>
+    </div>
+    <div class="card">
+      <div class="card-title"><span class="dot" style="background:var(--green)"></span>앱 개발</div>
+      <div style="font-size:13px;color:var(--text2);margin-bottom:8px">홈 화면 퍼블리싱 · Liquid Glass 탭바 + 버튼</div>
+      <div style="display:flex;justify-content:space-between;font-size:12px;color:var(--text3)"><span>진행률</span><span>45%</span></div>
+      <div class="progress-bar"><div class="fill" style="width:45%;background:var(--green)"></div></div>
+    </div>
+    <div class="card">
+      <div class="card-title"><span class="dot" style="background:var(--blue)"></span>인프라</div>
+      <div style="font-size:13px;color:var(--text2);margin-bottom:8px">Supabase 연동 · Naver API 연동</div>
+      <div style="display:flex;justify-content:space-between;font-size:12px;color:var(--text3)"><span>진행률</span><span>60%</span></div>
+      <div class="progress-bar"><div class="fill" style="width:60%;background:var(--blue)"></div></div>
+    </div>
+  </div>
+
+  <div class="grid-2" style="margin-top:16px">
+    <div class="card">
+      <div class="card-title">잔여 작업</div>
+      <ul class="checklist">
+        <li><span class="check done"></span>Figma Variables 바인딩 완료</li>
+        <li><span class="check done"></span>디자인 토큰 통일</li>
+        <li><span class="check done"></span>위젯 12개 이관</li>
+        <li><span class="check"></span>홈 화면 인터랙션 구현</li>
+        <li><span class="check"></span>Liquid Glass 컴포넌트 최적화</li>
+        <li><span class="check"></span>Supabase 인증 플로우 연결</li>
+        <li><span class="check"></span>Naver 쇼핑 API 상품 연동</li>
+        <li><span class="check"></span>추출 타이머 UI 구현</li>
+        <li><span class="check"></span>온보딩 설문 플로우</li>
+        <li><span class="check"></span>추출 로그 저장 기능</li>
+      </ul>
+    </div>
+    <div class="card">
+      <div class="card-title">최근 완료 타임라인</div>
+      <div class="timeline">
+        <div class="timeline-item"><div class="tl-date">2025.05</div><div class="tl-text">Figma Variables 91,030 바인딩 완료</div></div>
+        <div class="timeline-item"><div class="tl-date">2025.05</div><div class="tl-text">Liquid Glass 탭바 + 버튼 디자인</div></div>
+        <div class="timeline-item"><div class="tl-date">2025.04</div><div class="tl-text">디자인 시스템 토큰 통일</div></div>
+        <div class="timeline-item"><div class="tl-date">2025.04</div><div class="tl-text">위젯 12개 Figma 이관</div></div>
+        <div class="timeline-item"><div class="tl-date">2025.03</div><div class="tl-text">홈 화면 퍼블리싱 완료</div></div>
+        <div class="timeline-item"><div class="tl-date">2025.03</div><div class="tl-text">Supabase 프로젝트 세팅</div></div>
+        <div class="timeline-item"><div class="tl-date">2025.02</div><div class="tl-text">Naver API 키 발급 및 테스트</div></div>
+        <div class="timeline-item"><div class="tl-date">2025.01</div><div class="tl-text">퍼소나 5종 리서치 완료</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 2. Persona -->
+<section class="page" id="page-persona">
+  <h2 class="page-title">퍼소나</h2>
+  <p class="page-desc">Coflanet의 핵심 사용자 5종을 카드로 정리했어요.</p>
+
+  <div class="grid-2" id="persona-grid">
+    <!-- JS로 렌더링 -->
+  </div>
+</section>
+
+<!-- 3. Decision -->
+<section class="page" id="page-decision">
+  <h2 class="page-title">퍼소나 의사결정</h2>
+  <p class="page-desc">고민이나 질문을 입력하면 5명의 퍼소나 관점에서 AI가 답변해요.</p>
+
+  <div class="card">
+    <textarea class="decision-input" id="decisionInput" placeholder="예: 온보딩 설문을 3단계로 줄이면 이탈률이 줄까?"></textarea>
+    <div style="display:flex;gap:8px;margin-top:12px">
+      <button class="btn btn-primary" onclick="askPersona()">퍼소나에게 물어보기</button>
+      <button class="btn btn-secondary" onclick="clearHistory()">히스토리 초기화</button>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:8px">
+    <div class="card-title">이전 질문 히스토리</div>
+    <div id="historyList" style="max-height:400px;overflow-y:auto">
+      <div style="color:var(--text3);font-size:13px;padding:8px 0">아직 질문이 없어요.</div>
+    </div>
+  </div>
+</section>
+
+<!-- 4. Roadmap -->
+<section class="page" id="page-roadmap">
+  <h2 class="page-title">로드맵 타임라인</h2>
+  <p class="page-desc">3단계 Phase 로드맵과 각 기능의 바이브코딩 가능 여부를 확인하세요.</p>
+
+  <div class="card" id="roadmap-content">
+    <!-- JS로 렌더링 -->
+  </div>
+</section>
+
+<!-- 5. IA -->
+<section class="page" id="page-ia">
+  <h2 class="page-title">IA 정보구조</h2>
+  <p class="page-desc">현재 앱의 정보 구조와 로드맵별 추가 기능 위치를 시각화했어요.</p>
+
+  <div class="card">
+    <ul class="ia-tree" id="ia-tree">
+      <!-- JS로 렌더링 -->
+    </ul>
+  </div>
+</section>
+
+<!-- 6. Cost -->
+<section class="page" id="page-cost">
+  <h2 class="page-title">개발 비용 분석</h2>
+  <p class="page-desc">15개 기능의 바이브코딩 가능 여부와 개발 비용을 분석했어요.</p>
+
+  <div class="grid-2" style="margin-bottom:16px">
+    <div class="card" style="text-align:center">
+      <div style="font-size:36px;font-weight:800;color:var(--green)">73%</div>
+      <div style="font-size:13px;color:var(--text2);margin-top:4px">바이브코딩 가능 (11개)</div>
+    </div>
+    <div class="card" style="text-align:center">
+      <div style="font-size:36px;font-weight:800;color:var(--red)">700~1,300만</div>
+      <div style="font-size:13px;color:var(--text2);margin-top:4px">위험 기능 월 개발비</div>
+    </div>
+  </div>
+
+  <div class="card" style="overflow-x:auto">
+    <table class="cost-table">
+      <thead>
+        <tr><th>기능</th><th>구분</th><th>바이브코딩</th><th>월 비용</th><th>비고</th></tr>
+      </thead>
+      <tbody id="cost-tbody">
+        <!-- JS로 렌더링 -->
+      </tbody>
+    </table>
+  </div>
+</section>
+
+</main>
+
+<script>
+// ── Navigation ──
+function navigate(page){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+  document.getElementById('page-'+page).classList.add('active');
+  event.currentTarget.classList.add('active');
+  if(window.innerWidth<=768) toggleSidebar();
+  document.getElementById('main').scrollTop=0;
+}
+function toggleSidebar(){
+  document.getElementById('sidebar').classList.toggle('open');
+  document.getElementById('overlay').classList.toggle('show');
+}
+
+// ── Persona Data ──
+const personas=[
+  {name:'이서현',age:41,job:'사무직',level:'홈카페 2년차',color:'#6541F2',
+   equip:'장비 150만원, 월 원두 25만원',
+   pains:['향미노트 이해 불가','맛 재현 실패','추출 기록 누락'],
+   pay:'월 1.5~3만원 구독 + 프리미엄 4,900~9,900원',tag:null},
+  {name:'한은성',age:32,job:'전업주부',level:'8년차 중급자',color:'#34d399',
+   equip:'장비 500만원+, 월 원두 5~10만원',
+   pains:['그라인더 업그레이드 정체','다이얼링 낭비','SCA 큐핑 어색'],
+   pay:'단발, 장비연동 월 4,900~14,900원',tag:null},
+  {name:'이민재',age:34,job:'개발자',level:'입문',color:'#60a5fa',
+   equip:'첫 구매 80~120만원',
+   pains:['동시 결정 부담','비교 어려움','기본 개념 미학습'],
+   pay:'무료 → 월 1.5만 구독',tag:null},
+  {name:'박지원',age:28,job:'MZ 디자이너',level:'입문~초급',color:'#fbbf24',
+   equip:'장비 30~80만원, 인스타 동기',
+   pains:['예쁘지만 성능 분리','6개월 권태','검증 욕구'],
+   pay:'무료 선호, 콘텐츠 시 월 5,900~9,900원',tag:'신규'},
+  {name:'최도현',age:36,job:'1인 카페 바리스타',level:'프로',color:'#f87171',
+   equip:'셋업 700만원+, 직원 1명',
+   pains:['소싱 비교 도구 없음','교육 자료 부재','맞춤 추천 시간 부족'],
+   pay:'B2B SaaS-lite 월 19,900~39,900원',tag:'신규'}
+];
+
+function renderPersonas(){
+  const grid=document.getElementById('persona-grid');
+  grid.innerHTML=personas.map(p=>`
+    <div class="persona-card">
+      <div class="persona-header">
+        <div class="avatar" style="background:${p.color}">${p.name[0]}</div>
+        <div>
+          <div class="persona-name">${p.name} ${p.tag?`<span class="badge badge-new">★${p.tag}</span>`:''}</div>
+          <div class="persona-sub">${p.age}세 · ${p.job} · ${p.level}</div>
+        </div>
+      </div>
+      <div><span class="persona-section">장비/소비</span><div class="persona-detail">${p.equip}</div></div>
+      <div><span class="persona-section">페인포인트</span><div class="persona-detail">${p.pains.map(x=>'• '+x).join('<br>')}</div></div>
+      <div><span class="persona-section">결제 의향</span><div class="persona-detail">${p.pay}</div></div>
+    </div>
+  `).join('');
+}
+
+// ── Decision ──
+function askPersona(){
+  const input=document.getElementById('decisionInput');
+  const q=input.value.trim();
+  if(!q) return;
+
+  const history=JSON.parse(localStorage.getItem('coflanet_history')||'[]');
+  history.unshift({q,time:new Date().toLocaleString('ko-KR')});
+  if(history.length>50) history.pop();
+  localStorage.setItem('coflanet_history',JSON.stringify(history));
+  renderHistory();
+
+  const prompt=`다음 질문에 대해 Coflanet의 5명의 퍼소나 관점에서 각각 답변해줘.
+
+퍼소나:
+1. 이서현 (41세, 사무직, 홈카페 2년차) - 향미노트 이해 불가, 맛 재현 실패
+2. 한은성 (32세, 전업주부, 8년차 중급자) - 그라인더 업그레이드 정체, 다이얼링 낭비
+3. 이민재 (34세, 개발자, 입문) - 동시 결정 부담, 비교 어려움
+4. 박지원 (28세, MZ 디자이너) - 예쁘지만 성능 분리, 6개월 권태
+5. 최도현 (36세, 1인 카페 바리스타) - 소싱 비교 도구 없음, 교육 자료 부재
+
+질문: ${q}
+
+각 퍼소나별로 이름을 붙여서 "이 기능/변경이 자신에게 어떤 의미인지, 긍정/부정 반응, 제안"을 답변해줘.`;
+
+  if(typeof sendPrompt==='function'){
+    sendPrompt(prompt);
+  } else {
+    alert('sendPrompt 함수를 사용할 수 없어요. Cowork 환경에서 실행해주세요.');
+  }
+  input.value='';
+}
+
+function renderHistory(){
+  const list=document.getElementById('historyList');
+  const history=JSON.parse(localStorage.getItem('coflanet_history')||'[]');
+  if(!history.length){
+    list.innerHTML='<div style="color:var(--text3);font-size:13px;padding:8px 0">아직 질문이 없어요.</div>';
+    return;
+  }
+  list.innerHTML=history.map(h=>`
+    <div class="history-item">
+      <div class="history-q">${h.q}</div>
+      <div class="history-time">${h.time}</div>
+    </div>
+  `).join('');
+}
+
+function clearHistory(){
+  localStorage.removeItem('coflanet_history');
+  renderHistory();
+}
+
+// ── Roadmap ──
+const roadmap=[
+  {phase:'Phase 1',period:'0~3개월 (MVP)',color:'var(--green)',features:[
+    {name:'설문 원두 추천',vibe:true,ia:'홈 > 추천',bench:'Beanconqueror'},
+    {name:'추출 레시피 타이머',vibe:true,ia:'추출 > 타이머',bench:'Brewfather'},
+    {name:'추출 로그 저장',vibe:true,ia:'추출 > 로그',bench:'Beanconqueror'},
+    {name:'쇼핑·정기구독',vibe:false,ia:'쇼핑',bench:'쿠팡'},
+    {name:'N1: OCR 라벨 스캔',vibe:false,ia:'도구 > OCR',bench:'Vivino'},
+    {name:'N5: 도구 진단 퀴즈',vibe:true,ia:'도구 > 진단',bench:'-'},
+  ]},
+  {phase:'Phase 2',period:'3~9개월',color:'var(--yellow)',features:[
+    {name:'N2: 3원 그래프',vibe:true,ia:'추출 > 분석',bench:'Coffee Flavor Wheel'},
+    {name:'N3: 신선도 알림',vibe:true,ia:'내 원두 > 알림',bench:'-'},
+    {name:'N4: 취향 요약 카드',vibe:true,ia:'프로필 > 취향',bench:'Spotify Wrapped'},
+    {name:'커뮤니티',vibe:true,ia:'커뮤니티',bench:'Reddit, 블라인드'},
+    {name:'AI 추천 고도화',vibe:true,ia:'홈 > AI추천',bench:'Netflix'},
+  ]},
+  {phase:'Phase 3',period:'9~18개월',color:'var(--red)',features:[
+    {name:'N6: 블루투스 스케일 연동',vibe:false,ia:'추출 > 연동',bench:'Acaia'},
+    {name:'N7: 카페 비교 리뷰',vibe:true,ia:'카페',bench:'네이버 지도'},
+    {name:'N8: 바리스타 SaaS',vibe:false,ia:'(별도 앱)',bench:'Toast POS'},
+    {name:'게이미피케이션',vibe:true,ia:'프로필 > 배지',bench:'Duolingo'},
+  ]}
+];
+
+function renderRoadmap(){
+  const el=document.getElementById('roadmap-content');
+  el.innerHTML=roadmap.map(ph=>`
+    <div class="phase-header" style="color:${ph.color}">
+      <span style="font-size:20px">●</span> ${ph.phase} <span style="font-size:13px;color:var(--text3);font-weight:400">${ph.period}</span>
+    </div>
+    ${ph.features.map(f=>`
+      <div class="feature-row">
+        <div class="feature-name">${f.name}</div>
+        <div class="feature-meta">
+          <span class="badge ${f.vibe?'badge-vibe':'badge-risk'}">${f.vibe?'바이브코딩':'개발자 필요'}</span>
+          <span class="badge badge-phase">${f.ia}</span>
+          ${f.bench!=='-'?`<span style="font-size:11px;color:var(--text3)">cf. ${f.bench}</span>`:''}
+        </div>
+      </div>
+    `).join('')}
+  `).join('');
+}
+
+// ── IA Tree ──
+function renderIA(){
+  const tree=document.getElementById('ia-tree');
+  const data=[
+    {label:'Coflanet App',children:[
+      {label:'홈',children:[
+        {label:'추천 원두 (설문 기반)'},
+        {label:'AI 추천',new:true,phase:'P2'},
+      ]},
+      {label:'추출',children:[
+        {label:'레시피 타이머'},
+        {label:'추출 로그'},
+        {label:'N2: 3원 그래프',new:true,phase:'P2'},
+        {label:'N6: 블루투스 연동',new:true,phase:'P3'},
+      ]},
+      {label:'내 원두',children:[
+        {label:'원두 목록'},
+        {label:'N1: OCR 라벨 스캔',new:true,phase:'P1'},
+        {label:'N3: 신선도 알림',new:true,phase:'P2'},
+      ]},
+      {label:'쇼핑',children:[
+        {label:'상품 목록 (Naver API)'},
+        {label:'정기구독'},
+      ]},
+      {label:'도구',children:[
+        {label:'N5: 도구 진단 퀴즈',new:true,phase:'P1'},
+      ]},
+      {label:'프로필',children:[
+        {label:'취향 설정'},
+        {label:'N4: 취향 요약 카드',new:true,phase:'P2'},
+        {label:'게이미피케이션 배지',new:true,phase:'P3'},
+      ]},
+      {label:'커뮤니티',new:true,phase:'P2'},
+      {label:'카페',children:[
+        {label:'N7: 카페 비교 리뷰',new:true,phase:'P3'},
+      ]},
+    ]},
+    {label:'바리스타 SaaS (별도)',new:true,phase:'P3',children:[
+      {label:'N8: 매장 관리'},
+      {label:'소싱 비교'},
+      {label:'교육 콘텐츠'},
+    ]}
+  ];
+  function build(items){
+    return items.map(item=>{
+      const cls=item.new?'ia-new':'';
+      const phBadge=item.phase?`<span class="badge badge-phase" style="margin-left:4px;font-size:10px">${item.phase}</span>`:'';
+      let html=`<li><span class="ia-node"><span class="ia-label ${cls}">${item.label}</span>${phBadge}</span>`;
+      if(item.children) html+=`<ul>${build(item.children)}</ul>`;
+      html+='</li>';
+      return html;
+    }).join('');
+  }
+  tree.innerHTML=build(data);
+}
+
+// ── Cost Table ──
+const costs=[
+  {name:'설문 원두 추천',cat:'MVP',vibe:true,cost:'-',note:'Supabase + 로직'},
+  {name:'추출 레시피 타이머',cat:'MVP',vibe:true,cost:'-',note:'프론트엔드'},
+  {name:'추출 로그 저장',cat:'MVP',vibe:true,cost:'-',note:'Supabase DB'},
+  {name:'쇼핑·정기구독',cat:'MVP',vibe:false,cost:'월 200~400만',note:'PG 결제 연동'},
+  {name:'N1: OCR 라벨 스캔',cat:'MVP',vibe:false,cost:'월 100~200만',note:'Vision API'},
+  {name:'N2: 3원 그래프',cat:'확장',vibe:true,cost:'-',note:'D3.js 시각화'},
+  {name:'N3: 신선도 알림',cat:'확장',vibe:true,cost:'-',note:'로컬 알림'},
+  {name:'N4: 취향 요약 카드',cat:'확장',vibe:true,cost:'-',note:'프론트엔드'},
+  {name:'N5: 도구 진단 퀴즈',cat:'MVP',vibe:true,cost:'-',note:'설문 로직'},
+  {name:'커뮤니티',cat:'확장',vibe:true,cost:'-',note:'게시판 CRUD'},
+  {name:'AI 추천 고도화',cat:'확장',vibe:true,cost:'-',note:'OpenAI API'},
+  {name:'N6: 블루투스 스케일',cat:'고도화',vibe:false,cost:'월 300~500만',note:'BLE 네이티브'},
+  {name:'N7: 카페 비교 리뷰',cat:'고도화',vibe:true,cost:'-',note:'지도 API'},
+  {name:'N8: 바리스타 SaaS',cat:'고도화',vibe:false,cost:'별도 트랙',note:'B2B 플랫폼'},
+  {name:'게이미피케이션',cat:'고도화',vibe:true,cost:'-',note:'배지 시스템'},
+];
+
+function renderCost(){
+  const tbody=document.getElementById('cost-tbody');
+  tbody.innerHTML=costs.map(c=>`
+    <tr>
+      <td style="color:var(--text);font-weight:500">${c.name}</td>
+      <td><span class="badge badge-phase">${c.cat}</span></td>
+      <td><span class="badge ${c.vibe?'badge-vibe':'badge-risk'}">${c.vibe?'가능':'필요'}</span></td>
+      <td>${c.cost}</td>
+      <td>${c.note}</td>
+    </tr>
+  `).join('');
+}
+
+// ── Init ──
+renderPersonas();
+renderHistory();
+renderRoadmap();
+renderIA();
+renderCost();
+
+// Enter key for decision
+document.getElementById('decisionInput').addEventListener('keydown',e=>{
+  if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();askPersona();}
+});
+</script>
+</body>
+</html>
