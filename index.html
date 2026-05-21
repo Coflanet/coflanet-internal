@@ -49,7 +49,7 @@ html{font-size:14px}
 body{font-family:'Pretendard','Apple SD Gothic Neo',system-ui,sans-serif;background:var(--color-bg);color:var(--color-inverse-label);min-height:100vh;display:flex;overflow:hidden;-webkit-font-smoothing:antialiased;letter-spacing:-.01em}
 
 /* Sidebar v2 — 240 컨테이너 안 236 흰 박스 */
-.sidebar{position:fixed;left:4px;top:4px;width:236px;height:calc(100vh - 8px);background:#FFFFFF;border-radius:32px;padding:24px 16px;display:flex;flex-direction:column;flex-shrink:0;z-index:100;transition:transform .3s}
+.sidebar{position:fixed;left:4px;top:4px;width:236px;height:calc(100vh - 8px);background:#FFFFFF;border-radius:32px;padding:20px 16px;display:flex;flex-direction:column;flex-shrink:0;z-index:100;transition:transform .3s}
 .sidebar-header{padding:0 0 20px;display:flex;align-items:center;gap:10px}
 .sidebar-header .logo-wrap{display:flex;align-items:center;gap:10px;height:32px}
 .sidebar-header .logo-symbol{width:32px;height:32px;background:var(--color-primary-soft);border-radius:9px;display:flex;align-items:center;justify-content:center;padding:5px;flex-shrink:0}
@@ -58,9 +58,9 @@ body{font-family:'Pretendard','Apple SD Gothic Neo',system-ui,sans-serif;backgro
 .sidebar-header h1{font-size:14px;font-weight:700;color:var(--color-static-black);letter-spacing:-.02em}
 .sidebar-header .brand span{font-size:10px;color:var(--color-label-neutral);margin-top:3px;font-weight:600;letter-spacing:.08em;text-transform:uppercase}
 .sidebar nav{flex:1;padding:0;overflow-y:auto;display:flex;flex-direction:column;gap:2px}
-.nav-item{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:8px;cursor:pointer;color:var(--color-label-neutral);font-size:16px;font-weight:400;transition:.15s;user-select:none;letter-spacing:-.01em;line-height:1.25}
-.nav-item:hover{background:#F4F4F6;color:var(--color-label-normal)}
-.nav-item.active{background:var(--color-primary);color:#FFFFFF;font-weight:500}
+.nav-item{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:8px;cursor:pointer;color:#171719;font-size:14px;font-weight:400;transition:.15s;user-select:none;letter-spacing:-.01em;line-height:1.4}
+.nav-item:hover{background:#F4F4F6;color:#171719}
+.nav-item.active{background:var(--color-primary);color:#FFFFFF;font-weight:600}
 .nav-item svg{width:20px;height:20px;flex-shrink:0}
 .sidebar-footer{padding:16px 12px 4px;font-size:11px;color:var(--color-label-neutral);display:flex;align-items:center;gap:8px}
 .sidebar-footer .pulse{width:6px;height:6px;border-radius:50%;background:var(--green);box-shadow:0 0 8px var(--green)}
