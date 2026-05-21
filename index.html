@@ -3,71 +3,80 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Coflanet Internal</title>
+<title>Coflanet Cockpit</title>
 <link rel="icon" type="image/svg+xml" href="images/logo-symbol.svg">
 <link rel="preconnect" href="https://cdn.jsdelivr.net">
 <link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
-  /* Coflanet 디자인 토큰 */
+  /* Coflanet Cockpit 디자인 토큰 */
   --bg:#0F0F11;--bg2:#16161A;--bg3:#1E1E24;--bg4:#26262E;
-  --card:#1B1C1E;--card-hover:#22232A;
+  --card:#1B1C1E;--card-hover:#22232A;--sidebar:#1B1C1E;
   --primary:#6541F2;--primary-dim:#6541F233;--primary-light:#8B6FFF;--primary-soft:#6541F215;
   --text:#F4F4F6;--text2:#A8A8B4;--text3:#68687A;
   --border:#2A2A36;--border-soft:#22222C;
   --green:#34D399;--yellow:#FBBF24;--red:#F87171;--blue:#60A5FA;
-  --radius-card:24px;--radius-btn:12px;--radius-sm:10px;--radius-avatar:100px;
+  --radius-card:16px;--radius-btn:10px;--radius-sm:8px;--radius-avatar:100px;
   --shadow-card:0 4px 24px rgba(0,0,0,.25);
   --shadow-primary:0 8px 32px rgba(101,65,242,.25);
+  --sidebar-width:240px;
 }
 html{font-size:14px}
 body{font-family:'Pretendard','Apple SD Gothic Neo',system-ui,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;overflow:hidden;-webkit-font-smoothing:antialiased;letter-spacing:-.01em}
 
 /* Sidebar */
-.sidebar{width:248px;height:100vh;background:var(--bg2);border-right:1px solid var(--border-soft);display:flex;flex-direction:column;flex-shrink:0;position:fixed;left:0;top:0;z-index:100;transition:transform .3s}
-.sidebar-header{padding:24px 20px;border-bottom:1px solid var(--border-soft);display:flex;align-items:center;gap:10px}
+.sidebar{width:var(--sidebar-width);height:100vh;background:var(--sidebar);border-right:1px solid var(--border-soft);display:flex;flex-direction:column;flex-shrink:0;position:fixed;left:0;top:0;z-index:100;transition:transform .3s}
+.sidebar-header{padding:22px 18px;border-bottom:1px solid var(--border-soft);display:flex;align-items:center;gap:10px}
 .sidebar-header .logo-wrap{display:flex;align-items:center;gap:10px}
-.sidebar-header .logo-symbol{width:36px;height:36px;background:var(--primary-soft);border-radius:10px;display:flex;align-items:center;justify-content:center;padding:6px;box-shadow:inset 0 0 0 1px var(--primary-dim)}
+.sidebar-header .logo-symbol{width:34px;height:34px;background:var(--primary-soft);border-radius:9px;display:flex;align-items:center;justify-content:center;padding:5px;box-shadow:inset 0 0 0 1px var(--primary-dim)}
 .sidebar-header .logo-symbol svg{width:100%;height:100%}
-.sidebar-header .brand{display:flex;flex-direction:column}
-.sidebar-header h1{font-size:15px;font-weight:700;color:var(--text);letter-spacing:-.02em}
-.sidebar-header .brand span{font-size:10px;color:var(--text3);margin-top:2px;font-weight:500;letter-spacing:.04em;text-transform:uppercase}
-.sidebar nav{flex:1;padding:16px 12px;overflow-y:auto}
-.nav-item{display:flex;align-items:center;gap:12px;padding:11px 14px;border-radius:var(--radius-btn);cursor:pointer;color:var(--text2);font-size:13px;font-weight:500;transition:.15s;user-select:none;margin-bottom:2px}
+.sidebar-header .brand{display:flex;flex-direction:column;line-height:1.1}
+.sidebar-header h1{font-size:14px;font-weight:700;color:var(--text);letter-spacing:-.02em}
+.sidebar-header .brand span{font-size:10px;color:var(--text3);margin-top:3px;font-weight:600;letter-spacing:.08em;text-transform:uppercase}
+.sidebar nav{flex:1;padding:14px 10px;overflow-y:auto}
+.nav-item{display:flex;align-items:center;gap:11px;padding:10px 12px;border-radius:var(--radius-btn);cursor:pointer;color:var(--text2);font-size:13px;font-weight:500;transition:.15s;user-select:none;margin-bottom:2px}
 .nav-item:hover{background:var(--bg3);color:var(--text)}
 .nav-item.active{background:var(--primary-dim);color:var(--primary-light);font-weight:600}
-.nav-item svg{width:18px;height:18px;flex-shrink:0}
-.sidebar-footer{padding:18px 22px;border-top:1px solid var(--border-soft);font-size:11px;color:var(--text3);display:flex;align-items:center;gap:8px}
+.nav-item svg{width:17px;height:17px;flex-shrink:0}
+.sidebar-footer{padding:16px 18px;border-top:1px solid var(--border-soft);font-size:11px;color:var(--text3);display:flex;align-items:center;gap:8px}
 .sidebar-footer .pulse{width:6px;height:6px;border-radius:50%;background:var(--green);box-shadow:0 0 8px var(--green)}
-.mobile-toggle{display:none;position:fixed;top:12px;left:12px;z-index:200;background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-btn);width:40px;height:40px;color:var(--text);cursor:pointer;align-items:center;justify-content:center}
+.mobile-toggle{display:none;position:fixed;top:12px;left:12px;z-index:200;background:var(--card);border:1px solid var(--border);border-radius:var(--radius-btn);width:40px;height:40px;color:var(--text);cursor:pointer;align-items:center;justify-content:center}
 .overlay{display:none;position:fixed;inset:0;background:#0008;z-index:90;backdrop-filter:blur(4px)}
 
 /* Main */
-.main{margin-left:248px;flex:1;height:100vh;overflow-y:auto;padding:36px 40px;width:calc(100% - 248px)}
+.main{margin-left:var(--sidebar-width);flex:1;height:100vh;overflow-y:auto;padding:32px 36px;width:calc(100% - var(--sidebar-width))}
 .page{display:none;animation:fadeIn .25s ease}
 .page.active{display:block}
 @keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
-.page-header{margin-bottom:28px}
-.page-title{font-size:26px;font-weight:800;margin-bottom:6px;letter-spacing:-.02em}
-.page-desc{color:var(--text2);font-size:14px;line-height:1.5}
+.page-header{margin-bottom:24px}
+.page-title{font-size:24px;font-weight:800;margin-bottom:6px;letter-spacing:-.02em}
+.page-desc{color:var(--text2);font-size:13px;line-height:1.5}
 
 /* Cards */
-.card{background:var(--card);border:1px solid var(--border-soft);border-radius:var(--radius-card);padding:24px;margin-bottom:16px;box-shadow:var(--shadow-card);transition:.2s}
-.card-title{font-size:14px;font-weight:700;margin-bottom:16px;display:flex;align-items:center;gap:8px;color:var(--text)}
+.card{background:var(--card);border:1px solid var(--border-soft);border-radius:var(--radius-card);padding:22px;margin-bottom:14px;box-shadow:var(--shadow-card);transition:.2s}
+.card-title{font-size:13px;font-weight:700;margin-bottom:14px;display:flex;align-items:center;gap:8px;color:var(--text)}
 .card-title .dot{width:8px;height:8px;border-radius:50%}
 
 /* Grid */
-.grid-2{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:16px}
-.grid-3{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px}
+.grid-2{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:14px}
+.grid-3{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px}
+.grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+@media(max-width:1180px){.grid-4{grid-template-columns:repeat(2,1fr)}}
 
 /* Stats */
-.stat-card{display:flex;flex-direction:column;gap:8px}
-.stat-meta{display:flex;justify-content:space-between;align-items:center;font-size:12px;color:var(--text3);margin-top:4px}
-.stat-meta .stat-num{font-size:13px;color:var(--text);font-weight:600}
+.stat-card{display:flex;flex-direction:column;gap:6px;position:relative;overflow:hidden}
+.stat-card::before{content:'';position:absolute;top:0;left:0;width:3px;height:100%;background:var(--stat-color,var(--primary))}
+.stat-card .stat-icon{width:32px;height:32px;border-radius:8px;background:color-mix(in srgb,var(--stat-color,var(--primary)) 18%,transparent);display:flex;align-items:center;justify-content:center;margin-bottom:4px;color:var(--stat-color,var(--primary))}
+.stat-card .stat-icon svg{width:18px;height:18px}
+.stat-card .stat-name{font-size:12px;color:var(--text3);font-weight:600;letter-spacing:.04em;text-transform:uppercase}
+.stat-card .stat-value{font-size:28px;font-weight:800;letter-spacing:-.03em;line-height:1.1}
+.stat-card .stat-sub{font-size:12px;color:var(--text2);line-height:1.4}
+.stat-meta{display:flex;justify-content:space-between;align-items:center;font-size:11px;color:var(--text3);margin-top:6px}
+.stat-meta .stat-num{font-size:12px;color:var(--text);font-weight:700}
 
 /* Progress */
-.progress-bar{height:6px;background:var(--bg4);border-radius:6px;overflow:hidden;margin-top:6px}
+.progress-bar{height:5px;background:var(--bg4);border-radius:6px;overflow:hidden;margin-top:4px}
 .progress-bar .fill{height:100%;border-radius:6px;transition:width .5s}
 
 /* Checklist */
@@ -80,36 +89,36 @@ body{font-family:'Pretendard','Apple SD Gothic Neo',system-ui,sans-serif;backgro
 .check.done::after{content:'✓';font-weight:700}
 
 /* Timeline */
-.timeline{position:relative;padding-left:28px}
-.timeline::before{content:'';position:absolute;left:8px;top:4px;bottom:4px;width:2px;background:linear-gradient(180deg,var(--primary) 0%,var(--border) 60%)}
-.timeline-item{position:relative;margin-bottom:18px}
+.timeline{position:relative;padding-left:26px}
+.timeline::before{content:'';position:absolute;left:7px;top:4px;bottom:4px;width:2px;background:linear-gradient(180deg,var(--primary) 0%,var(--border) 70%)}
+.timeline-item{position:relative;margin-bottom:16px}
 .timeline-item:last-child{margin-bottom:0}
-.timeline-item::before{content:'';position:absolute;left:-24px;top:4px;width:12px;height:12px;border-radius:50%;background:var(--primary);border:3px solid var(--bg);box-shadow:0 0 0 1px var(--primary)}
-.timeline-item .tl-date{font-size:11px;color:var(--text3);margin-bottom:4px;font-weight:600;letter-spacing:.02em}
+.timeline-item::before{content:'';position:absolute;left:-22px;top:4px;width:10px;height:10px;border-radius:50%;background:var(--primary);border:2.5px solid var(--card);box-shadow:0 0 0 1px var(--primary)}
+.timeline-item .tl-date{font-size:11px;color:var(--text3);margin-bottom:3px;font-weight:600;letter-spacing:.02em}
 .timeline-item .tl-text{font-size:13px;color:var(--text2);line-height:1.5}
 
 /* Persona */
-.persona-card{background:var(--card);border:1px solid var(--border-soft);border-radius:var(--radius-card);padding:24px;display:flex;flex-direction:column;gap:14px;box-shadow:var(--shadow-card);transition:.2s;position:relative;overflow:hidden}
+.persona-card{background:var(--card);border:1px solid var(--border-soft);border-radius:var(--radius-card);padding:22px;display:flex;flex-direction:column;gap:14px;box-shadow:var(--shadow-card);transition:.2s;position:relative;overflow:hidden}
 .persona-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--persona-color,var(--primary)),transparent)}
 .persona-card:hover{transform:translateY(-2px);border-color:var(--persona-color,var(--border))}
 .persona-header{display:flex;align-items:center;gap:14px}
-.avatar{width:64px;height:64px;border-radius:var(--radius-avatar);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:22px;color:#fff;flex-shrink:0;object-fit:cover;border:2px solid var(--border)}
+.avatar{width:60px;height:60px;border-radius:var(--radius-avatar);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:22px;color:#fff;flex-shrink:0;object-fit:cover;border:2px solid var(--border)}
 .avatar.initial{font-family:'Pretendard',sans-serif}
 .persona-name{font-size:16px;font-weight:700;display:flex;align-items:center;gap:6px;letter-spacing:-.01em}
 .persona-sub{font-size:12px;color:var(--text3);margin-top:2px;line-height:1.4}
-.persona-section{font-size:11px;color:var(--text3);font-weight:700;text-transform:uppercase;letter-spacing:.06em;margin-top:4px;display:block;margin-bottom:6px}
+.persona-section{font-size:11px;color:var(--text3);font-weight:700;text-transform:uppercase;letter-spacing:.06em;margin-top:4px;display:block;margin-bottom:5px}
 .persona-detail{font-size:13px;color:var(--text2);line-height:1.6}
-.badge{display:inline-flex;align-items:center;padding:3px 10px;border-radius:100px;font-size:11px;font-weight:600;letter-spacing:.01em}
+.badge{display:inline-flex;align-items:center;padding:3px 9px;border-radius:100px;font-size:11px;font-weight:600;letter-spacing:.01em}
 .badge-new{background:var(--primary-dim);color:var(--primary-light)}
 .badge-vibe{background:#34d39920;color:var(--green)}
 .badge-risk{background:#f8717120;color:var(--red)}
 .badge-phase{background:#60a5fa20;color:var(--blue)}
 
 /* Decision */
-.decision-input{width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-btn);padding:14px 16px;color:var(--text);font-size:14px;font-family:inherit;resize:vertical;min-height:90px;transition:.15s;letter-spacing:-.01em}
+.decision-input{width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-btn);padding:13px 15px;color:var(--text);font-size:14px;font-family:inherit;resize:vertical;min-height:88px;transition:.15s;letter-spacing:-.01em}
 .decision-input::placeholder{color:var(--text3)}
 .decision-input:focus{outline:none;border-color:var(--primary);box-shadow:0 0 0 3px var(--primary-dim)}
-.btn{padding:11px 22px;border-radius:var(--radius-btn);border:none;font-family:inherit;font-size:13px;font-weight:600;cursor:pointer;transition:.15s;letter-spacing:-.01em}
+.btn{padding:10px 20px;border-radius:var(--radius-btn);border:none;font-family:inherit;font-size:13px;font-weight:600;cursor:pointer;transition:.15s;letter-spacing:-.01em}
 .btn-primary{background:var(--primary);color:#fff;box-shadow:var(--shadow-primary)}
 .btn-primary:hover{background:var(--primary-light);transform:translateY(-1px)}
 .btn-secondary{background:var(--bg4);color:var(--text2)}
@@ -119,36 +128,52 @@ body{font-family:'Pretendard','Apple SD Gothic Neo',system-ui,sans-serif;backgro
 .history-q{color:var(--text);font-weight:500;margin-bottom:4px;line-height:1.5}
 .history-time{color:var(--text3);font-size:11px}
 
-/* Roadmap */
-.phase-header{font-size:17px;font-weight:800;margin:28px 0 14px;display:flex;align-items:center;gap:10px;letter-spacing:-.02em}
-.phase-header:first-child{margin-top:0}
-.phase-header .phase-dot{font-size:20px}
-.feature-row{display:flex;align-items:center;gap:8px;padding:12px 0;border-bottom:1px solid var(--border-soft);flex-wrap:wrap}
+/* Roadmap — phase 좌측 컬러 액센트 바 */
+.phase{position:relative;padding:18px 18px 18px 22px;border-radius:var(--radius-card);background:var(--bg3);border:1px solid var(--border-soft);margin-bottom:14px;overflow:hidden}
+.phase::before{content:'';position:absolute;top:0;left:0;bottom:0;width:4px;background:var(--phase-color,var(--primary));border-radius:4px 0 0 4px}
+.phase:last-child{margin-bottom:0}
+.phase-header{font-size:16px;font-weight:800;margin-bottom:6px;display:flex;align-items:center;gap:10px;letter-spacing:-.02em;color:var(--phase-color,var(--text))}
+.phase-period{font-size:12px;color:var(--text3);font-weight:500;margin-bottom:10px}
+.feature-row{display:flex;align-items:center;gap:8px;padding:11px 0;border-bottom:1px solid var(--border-soft);flex-wrap:wrap}
 .feature-row:last-child{border-bottom:none}
 .feature-name{font-size:13px;flex:1;min-width:150px;color:var(--text);font-weight:500}
 .feature-meta{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
 
 /* IA Tree */
 .ia-tree{padding-left:0;list-style:none}
-.ia-tree ul{padding-left:24px;list-style:none;border-left:1px solid var(--border);margin-left:10px}
-.ia-tree li{position:relative;padding:7px 0 7px 18px;font-size:13px;color:var(--text2)}
+.ia-tree ul{padding-left:22px;list-style:none;border-left:1px solid var(--border);margin-left:9px}
+.ia-tree li{position:relative;padding:6px 0 6px 16px;font-size:13px;color:var(--text2)}
 .ia-tree > li{padding-left:0}
-.ia-tree li::before{content:'';position:absolute;left:0;top:16px;width:12px;height:1px;background:var(--border)}
+.ia-tree li::before{content:'';position:absolute;left:0;top:15px;width:10px;height:1px;background:var(--border)}
 .ia-tree > li::before{display:none}
 .ia-node{display:inline-flex;align-items:center;gap:6px}
-.ia-label{background:var(--bg3);padding:4px 12px;border-radius:8px;font-size:12px;font-weight:500;color:var(--text)}
+.ia-label{background:var(--bg3);padding:4px 11px;border-radius:8px;font-size:12px;font-weight:500;color:var(--text)}
 .ia-new{border:1px dashed var(--primary);background:var(--primary-soft);color:var(--primary-light)}
 
-/* Cost Table */
+/* Cost — 바이브 vs 개발자 비교 */
+.cost-compare{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px}
+.cost-side{padding:22px;border-radius:var(--radius-card);position:relative;overflow:hidden}
+.cost-side.vibe{background:linear-gradient(135deg,#34d39912,#34d39903);border:1px solid #34d39933}
+.cost-side.dev{background:linear-gradient(135deg,#f8717112,#f8717103);border:1px solid #f8717133}
+.cost-side h3{font-size:14px;font-weight:700;margin-bottom:8px;letter-spacing:-.01em}
+.cost-side .cost-big{font-size:32px;font-weight:800;letter-spacing:-.03em;line-height:1;margin-bottom:6px}
+.cost-side.vibe .cost-big{color:var(--green)}
+.cost-side.dev .cost-big{color:var(--red)}
+.cost-side .cost-sub{font-size:12px;color:var(--text2);line-height:1.5}
+.cost-side ul{list-style:none;margin-top:12px;font-size:12px;color:var(--text2);line-height:1.7}
+.cost-side ul li{padding-left:14px;position:relative}
+.cost-side ul li::before{content:'•';position:absolute;left:0;color:var(--text3)}
+@media(max-width:768px){.cost-compare{grid-template-columns:1fr}}
+
 .cost-table{width:100%;border-collapse:collapse;font-size:13px}
-.cost-table th{text-align:left;padding:12px 14px;background:var(--bg3);color:var(--text2);font-weight:700;font-size:11px;border-bottom:1px solid var(--border);text-transform:uppercase;letter-spacing:.06em}
+.cost-table th{text-align:left;padding:11px 13px;background:var(--bg3);color:var(--text2);font-weight:700;font-size:11px;border-bottom:1px solid var(--border);text-transform:uppercase;letter-spacing:.06em}
 .cost-table th:first-child{border-top-left-radius:var(--radius-btn);border-bottom-left-radius:var(--radius-btn)}
 .cost-table th:last-child{border-top-right-radius:var(--radius-btn);border-bottom-right-radius:var(--radius-btn)}
-.cost-table td{padding:12px 14px;border-bottom:1px solid var(--border-soft);color:var(--text2)}
+.cost-table td{padding:11px 13px;border-bottom:1px solid var(--border-soft);color:var(--text2)}
 .cost-table tr:last-child td{border-bottom:none}
 .cost-table tr:hover td{background:var(--bg3)}
 
-.stat-big{font-size:40px;font-weight:800;letter-spacing:-.03em;line-height:1}
+.stat-big{font-size:36px;font-weight:800;letter-spacing:-.03em;line-height:1}
 .stat-label{font-size:13px;color:var(--text2);margin-top:6px;line-height:1.4}
 
 /* Scrollbar */
@@ -163,11 +188,11 @@ body{font-family:'Pretendard','Apple SD Gothic Neo',system-ui,sans-serif;backgro
   .sidebar.open{transform:translateX(0)}
   .mobile-toggle{display:flex}
   .overlay.show{display:block}
-  .main{margin-left:0;width:100%;padding:20px;padding-top:64px}
-  .grid-2,.grid-3{grid-template-columns:1fr}
-  .page-title{font-size:22px}
-  .card{padding:20px;border-radius:20px}
-  .persona-card{padding:20px}
+  .main{margin-left:0;width:100%;padding:18px;padding-top:62px}
+  .grid-2,.grid-3,.grid-4{grid-template-columns:1fr}
+  .page-title{font-size:21px}
+  .card{padding:18px;border-radius:14px}
+  .persona-card{padding:18px}
 }
 </style>
 </head>
@@ -189,7 +214,7 @@ body{font-family:'Pretendard','Apple SD Gothic Neo',system-ui,sans-serif;backgro
       </div>
       <div class="brand">
         <h1>Coflanet</h1>
-        <span>Internal</span>
+        <span>Cockpit</span>
       </div>
     </div>
   </div>
@@ -234,28 +259,46 @@ body{font-family:'Pretendard','Apple SD Gothic Neo',system-ui,sans-serif;backgro
     <p class="page-desc">프로젝트 전체 진행 현황을 한눈에 파악할 수 있어요.</p>
   </div>
 
-  <div class="grid-2">
-    <div class="card stat-card">
-      <div class="card-title"><span class="dot" style="background:var(--primary)"></span>디자인 시스템</div>
-      <div style="font-size:13px;color:var(--text2);line-height:1.5">토큰 통일 완료 · 위젯 12개 이관 · Figma Variables 91,030 바인딩</div>
-      <div class="stat-meta"><span>진행률</span><span class="stat-num">78%</span></div>
+  <div class="grid-4">
+    <div class="card stat-card" style="--stat-color:var(--primary)">
+      <div class="stat-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+      </div>
+      <div class="stat-name">Design System</div>
+      <div class="stat-value">78%</div>
+      <div class="stat-sub">토큰 통일 · Variables 91,030 바인딩 완료</div>
       <div class="progress-bar"><div class="fill" style="width:78%;background:var(--primary)"></div></div>
     </div>
-    <div class="card stat-card">
-      <div class="card-title"><span class="dot" style="background:var(--green)"></span>앱 개발</div>
-      <div style="font-size:13px;color:var(--text2);line-height:1.5">홈 화면 퍼블리싱 · Liquid Glass 탭바 + 버튼</div>
-      <div class="stat-meta"><span>진행률</span><span class="stat-num">45%</span></div>
-      <div class="progress-bar"><div class="fill" style="width:45%;background:var(--green)"></div></div>
+    <div class="card stat-card" style="--stat-color:var(--green)">
+      <div class="stat-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg>
+      </div>
+      <div class="stat-name">Widget</div>
+      <div class="stat-value">12<span style="font-size:16px;color:var(--text3);font-weight:600">개</span></div>
+      <div class="stat-sub">Figma → 앱 이관 완료 · Liquid Glass 적용</div>
+      <div class="progress-bar"><div class="fill" style="width:80%;background:var(--green)"></div></div>
     </div>
-    <div class="card stat-card">
-      <div class="card-title"><span class="dot" style="background:var(--blue)"></span>인프라</div>
-      <div style="font-size:13px;color:var(--text2);line-height:1.5">Supabase 연동 · Naver API 연동</div>
-      <div class="stat-meta"><span>진행률</span><span class="stat-num">60%</span></div>
-      <div class="progress-bar"><div class="fill" style="width:60%;background:var(--blue)"></div></div>
+    <div class="card stat-card" style="--stat-color:var(--blue)">
+      <div class="stat-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
+      </div>
+      <div class="stat-name">Token</div>
+      <div class="stat-value">91K</div>
+      <div class="stat-sub">Variables 바인딩 · Color/Spacing/Typo</div>
+      <div class="progress-bar"><div class="fill" style="width:92%;background:var(--blue)"></div></div>
+    </div>
+    <div class="card stat-card" style="--stat-color:var(--yellow)">
+      <div class="stat-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+      </div>
+      <div class="stat-name">Vibe Coding</div>
+      <div class="stat-value">73%</div>
+      <div class="stat-sub">15개 기능 중 11개 자체 구현 가능</div>
+      <div class="progress-bar"><div class="fill" style="width:73%;background:var(--yellow)"></div></div>
     </div>
   </div>
 
-  <div class="grid-2" style="margin-top:16px">
+  <div class="grid-2" style="margin-top:14px">
     <div class="card">
       <div class="card-title">잔여 작업</div>
       <ul class="checklist">
@@ -329,7 +372,7 @@ body{font-family:'Pretendard','Apple SD Gothic Neo',system-ui,sans-serif;backgro
     <p class="page-desc">3단계 Phase 로드맵과 각 기능의 바이브코딩 가능 여부를 확인하세요.</p>
   </div>
 
-  <div class="card" id="roadmap-content">
+  <div id="roadmap-content">
     <!-- JS로 렌더링 -->
   </div>
 </section>
@@ -355,14 +398,29 @@ body{font-family:'Pretendard','Apple SD Gothic Neo',system-ui,sans-serif;backgro
     <p class="page-desc">15개 기능의 바이브코딩 가능 여부와 개발 비용을 분석했어요.</p>
   </div>
 
-  <div class="grid-2" style="margin-bottom:16px">
-    <div class="card" style="text-align:center">
-      <div class="stat-big" style="color:var(--green)">73%</div>
-      <div class="stat-label">바이브코딩 가능 (11개)</div>
+  <div class="cost-compare">
+    <div class="cost-side vibe">
+      <h3>바이브코딩</h3>
+      <div class="cost-big">0원</div>
+      <div class="cost-sub">11개 기능 · 73% · 자체 구현 가능</div>
+      <ul>
+        <li>설문 원두 추천, 추출 타이머</li>
+        <li>추출 로그, 3원 그래프</li>
+        <li>신선도 알림, 취향 요약</li>
+        <li>커뮤니티, AI 추천 고도화</li>
+        <li>카페 리뷰, 게이미피케이션</li>
+      </ul>
     </div>
-    <div class="card" style="text-align:center">
-      <div class="stat-big" style="color:var(--red)">700~1,300만</div>
-      <div class="stat-label">위험 기능 월 개발비</div>
+    <div class="cost-side dev">
+      <h3>개발자 필요</h3>
+      <div class="cost-big">700~1,300만<span style="font-size:14px;color:var(--text3);font-weight:600">원/월</span></div>
+      <div class="cost-sub">4개 기능 · 27% · 외부 개발자 필요</div>
+      <ul>
+        <li>쇼핑·정기구독 (PG 결제 연동)</li>
+        <li>OCR 라벨 스캔 (Vision API)</li>
+        <li>블루투스 스케일 (BLE 네이티브)</li>
+        <li>바리스타 SaaS (B2B 별도 트랙)</li>
+      </ul>
     </div>
   </div>
 
@@ -496,7 +554,7 @@ function clearHistory(){
 
 // ── Roadmap ──
 const roadmap=[
-  {phase:'Phase 1',period:'0~3개월 (MVP)',color:'var(--green)',features:[
+  {phase:'Phase 1',period:'0~3개월 (MVP)',color:'#34d399',features:[
     {name:'설문 원두 추천',vibe:true,ia:'홈 > 추천',bench:'Beanconqueror'},
     {name:'추출 레시피 타이머',vibe:true,ia:'추출 > 타이머',bench:'Brewfather'},
     {name:'추출 로그 저장',vibe:true,ia:'추출 > 로그',bench:'Beanconqueror'},
@@ -504,14 +562,14 @@ const roadmap=[
     {name:'N1: OCR 라벨 스캔',vibe:false,ia:'도구 > OCR',bench:'Vivino'},
     {name:'N5: 도구 진단 퀴즈',vibe:true,ia:'도구 > 진단',bench:'-'},
   ]},
-  {phase:'Phase 2',period:'3~9개월',color:'var(--yellow)',features:[
+  {phase:'Phase 2',period:'3~9개월',color:'#fbbf24',features:[
     {name:'N2: 3원 그래프',vibe:true,ia:'추출 > 분석',bench:'Coffee Flavor Wheel'},
     {name:'N3: 신선도 알림',vibe:true,ia:'내 원두 > 알림',bench:'-'},
     {name:'N4: 취향 요약 카드',vibe:true,ia:'프로필 > 취향',bench:'Spotify Wrapped'},
     {name:'커뮤니티',vibe:true,ia:'커뮤니티',bench:'Reddit, 블라인드'},
     {name:'AI 추천 고도화',vibe:true,ia:'홈 > AI추천',bench:'Netflix'},
   ]},
-  {phase:'Phase 3',period:'9~18개월',color:'var(--red)',features:[
+  {phase:'Phase 3',period:'9~18개월',color:'#f87171',features:[
     {name:'N6: 블루투스 스케일 연동',vibe:false,ia:'추출 > 연동',bench:'Acaia'},
     {name:'N7: 카페 비교 리뷰',vibe:true,ia:'카페',bench:'네이버 지도'},
     {name:'N8: 바리스타 SaaS',vibe:false,ia:'(별도 앱)',bench:'Toast POS'},
@@ -522,19 +580,20 @@ const roadmap=[
 function renderRoadmap(){
   const el=document.getElementById('roadmap-content');
   el.innerHTML=roadmap.map(ph=>`
-    <div class="phase-header" style="color:${ph.color}">
-      <span class="phase-dot">●</span> ${ph.phase} <span style="font-size:13px;color:var(--text3);font-weight:500">${ph.period}</span>
-    </div>
-    ${ph.features.map(f=>`
-      <div class="feature-row">
-        <div class="feature-name">${f.name}</div>
-        <div class="feature-meta">
-          <span class="badge ${f.vibe?'badge-vibe':'badge-risk'}">${f.vibe?'바이브코딩':'개발자 필요'}</span>
-          <span class="badge badge-phase">${f.ia}</span>
-          ${f.bench!=='-'?`<span style="font-size:11px;color:var(--text3)">cf. ${f.bench}</span>`:''}
+    <div class="phase" style="--phase-color:${ph.color}">
+      <div class="phase-header">${ph.phase}</div>
+      <div class="phase-period">${ph.period}</div>
+      ${ph.features.map(f=>`
+        <div class="feature-row">
+          <div class="feature-name">${f.name}</div>
+          <div class="feature-meta">
+            <span class="badge ${f.vibe?'badge-vibe':'badge-risk'}">${f.vibe?'바이브코딩':'개발자 필요'}</span>
+            <span class="badge badge-phase">${f.ia}</span>
+            ${f.bench!=='-'?`<span style="font-size:11px;color:var(--text3)">cf. ${f.bench}</span>`:''}
+          </div>
         </div>
-      </div>
-    `).join('')}
+      `).join('')}
+    </div>
   `).join('');
 }
 
